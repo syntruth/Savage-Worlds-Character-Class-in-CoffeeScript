@@ -81,10 +81,7 @@ class SWCharacter
     @fatigue  = 0 if @fatigue < 0
 
   status_penalty: () -> -(@wounds + @fatigue)
-
-  incapacitated: () ->
-    return true if @wounds > 3 or @fatigue > 2
-    return false
+  incapacitated:  () -> (@wounds > 3 or @fatigue > 2)
 
   get_trait: (name) ->
     switch name
