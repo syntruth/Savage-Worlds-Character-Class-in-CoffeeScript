@@ -17,3 +17,5 @@
   represent those types of NPCs more accurately.
 - Changed SWDice half() method to take into account any +mods, since those
   are halved as well when figuring the half value of a die.
+- Added get_trait() method on NPC to override the super class version; this
+  will always return D6 if the trait is not found.

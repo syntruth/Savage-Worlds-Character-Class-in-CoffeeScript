@@ -109,6 +109,11 @@ class NPC extends SWCharacter
   @strength  = D6
   @vigor     = D6
 
+  get_trait: (name) ->
+    trait = super name
+    trait = D6 unless trait
+    return trait
+
 class Extra extends NPC
   up:   () -> not down()
   down: () -> @shaken
