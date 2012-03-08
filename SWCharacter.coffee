@@ -80,7 +80,7 @@ class SWCharacter
     @fatigue -= how_many
     @fatigue  = 0 if @fatigue < 0
 
-  status_penalty: () -> -@wounds + -@fatigue
+  status_penalty: () -> -(@wounds + @fatigue)
 
   incapacitated: () ->
     return true if @wounds > 3 or @fatigue > 2
@@ -96,7 +96,7 @@ class SWCharacter
       else
         if @skills[name] then @skills[name] else null
 
-  roll_trait: (name, mod = 0) -> get_trait(name).roll(mod)
+  roll_trait: (name, mod = 0) -> get_trait(name).roll(mod) + status_penalty()
 
 
 class PC extends SWCharacter
