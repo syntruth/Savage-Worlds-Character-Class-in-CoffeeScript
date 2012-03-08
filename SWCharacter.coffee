@@ -1,9 +1,11 @@
+require "SWDice"
+
 class SWCharacter
   @name          = ""
   @description   = ""
   @agility       = D4
   @smarts        = D4
-  @spirit        = d4
+  @spirit        = D4
   @strength      = D4
   @vigor         = D4
   @charisma      = 0
@@ -22,10 +24,12 @@ class SWCharacter
     @name        = options.name
     @description = options.description
 
-    this.set_stats      options.stats
-    this.set_skills     options.skills
-    this.set_edges      options.edges
-    this.set_hindrances options.hindrances
+    set_stats      options.stats
+    set_skills     options.skills
+    set_edges      options.edges
+    set_hindrances options.hindrances
+
+    update_derived()
 
   is_extra: () -> not @is_wildcard
 
@@ -36,9 +40,20 @@ class SWCharacter
     @strength = stats.strength
     @vigor    = stats.vigor
 
-  set_skills:     (s = {}) -> @skills[k]     = s[k] for k in s
+    update_derived()
+
+  set_skills: (skills = {}) ->
+    @skills[k] = skills[k] for k in skills
+
+    update_derived()
+
   set_edges:      (e = {}) -> @edges[k]      = e[k] for k in e
   set_hindrances: (h = {}) -> @hindrances[k] = h[k] for k in h
+
+  update_derived: () ->
+    fighting   = get_trait("fighting")
+    @parry     = fighting.half() + 2 if fighting
+    @toughness = @vigor.half() + 2
 
   give_wounds: (how_many = 1) ->
     @wounds += how_many
@@ -81,6 +96,8 @@ class SWCharacter
       else
         if @skills[name] then @skills[name] else null
 
+  roll_trait: (name, mod = 0) -> get_trait(name).roll(mod)
+
 
 class PC extends SWCharacter
   constructor: (options = {}) ->
@@ -95,4 +112,10 @@ class NPC extends SWCharacter
   @strength  = D6
   @vigor     = D6
 
+class Extra extends NPC
+  up:   () -> not down()
+  down: () -> @shaken
+
+class NPCWildCard extends NPC
+  @is_wildcard = true
 

@@ -6,3 +6,6 @@
 - Fixed @charisma typo.
 - Drank tea.
 - Added SWDice.coffee
+- Added number = 1 as a default to the SWDice constructor.
+- Changed some "==" to "is" to stick to the CoffeeScript idioms.
+- Added the half() and max() methods to the SWDice class.

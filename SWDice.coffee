@@ -1,7 +1,7 @@
 class SWDice
   @explode = true
 
-  constructor: (number, sides = 6, mod = 0) ->
+  constructor: (number = 1, sides = 6, mod = 0) ->
     @number = number
     @sides  = sides
     @mod    = mod
@@ -13,9 +13,12 @@ class SWDice
     while how_many > 0
       num       = Math.floor Math.random() * (@sides + 1)
       result   += num
-      how_many -= 1 unless @explode and num == @sides
+      how_many -= 1 unless @explode and num is @sides
 
     return result + @mod + mod
+
+  half: () -> @sides / 2
+  max:  () -> (@number * @sides) + @mod
 
 D4  = SWDice(1, 4)
 D6  = SWDice(1, 6)
