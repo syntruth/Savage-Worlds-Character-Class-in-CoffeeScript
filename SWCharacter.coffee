@@ -1,12 +1,12 @@
 class SWCharacter
   @name          = ""
   @description   = ""
-  @agility       = d4
-  @smarts        = d4
+  @agility       = D4
+  @smarts        = D4
   @spirit        = d4
-  @strength      = d4
-  @vigor         = d4
-  @charism       = 0
+  @strength      = D4
+  @vigor         = D4
+  @charisma      = 0
   @pace          = 6
   @parry         = 2
   @toughness     = 2
@@ -17,7 +17,6 @@ class SWCharacter
   @edges         = []
   @hindrances    = []
   @is_wildcard   = false
-  @incapacitated = false
 
   constructor: (options = {}) ->
     @name        = options.name
@@ -41,56 +40,36 @@ class SWCharacter
   set_edges:      (e = {}) -> @edges[k]      = e[k] for k in e
   set_hindrances: (h = {}) -> @hindrances[k] = h[k] for k in h
 
-  give_wound: (how_many = 1) ->
+  give_wounds: (how_many = 1) ->
     @wounds += how_many
 
     if @is_wildcard
-      if @wounds >= 4
-        @wounds        = 4
-        @incapacitated = true
+      @wounds = 4 if @wounds >= 4
     else
-      if @wounds >= 1
-        @wounds        = 1
-        @incapacitated = true
+      @wounds = 1 if @wounds >= 1
 
-    @shaken = true unless @incapacitated
+    @shaken = true unless incapacitated()
+    return @wounds
 
-    figure_penalty()
-
-    return @incapacitated
-
-  heal_wound: (how_many = 1) ->
+  heal_wounds: (how_many = 1) ->
     @wounds -= how_many
-
-    @wounds        = 0     if @wounds < 0
-    @incapacitated = false if @wounds <= 3
-
-    figure_penalty()
-
-    return @incapacitated
+    @wounds  = 0 if @wounds < 0
 
   give_fatigue: (how_many = 1) ->
     @fatigue += how_many
+    @fatigue  = 3 if @fatigue >= 3
 
-    if @fatigue >= 3
-      @fatigue       = 3
-      @incapacitated = true
-
-    figure_penalty()
-
-    return @incapacitated
+    return @fatigue
 
   recover_fatigue: (how_many = 1) ->
     @fatigue -= how_many
+    @fatigue  = 0 if @fatigue < 0
 
-    @fatigue       = 0    if @fatigue < 0
-    @incapacitated = true if @fatigue <= 2
+  status_penalty: () -> -@wounds + -@fatigue
 
-    figure_penalty()
-
-    return @incapacitated
-
-  figure_penalty: () -> @status_penalty = -@wounds + -@fatigue
+  incapacitated: () ->
+    return true if @wounds > 3 or @fatigue > 2
+    return false
 
   get_trait: (name) ->
     switch name
@@ -110,10 +89,10 @@ class PC extends SWCharacter
     @is_wildcard = true
 
 class NPC extends SWCharacter
-  @agility   = d6
-  @smarts    = d6
-  @spirit    = d6
-  @strength  = d6
-  @vigor     = d6
+  @agility   = D6
+  @smarts    = D6
+  @spirit    = D6
+  @strength  = D6
+  @vigor     = D6
 
 
