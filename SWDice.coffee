@@ -17,7 +17,7 @@ class SWDice
 
     return result + @mod + mod
 
-  half: () -> @sides / 2
+  half: () -> (@sides / 2) + (@mod / 2)
   max:  () -> (@number * @sides) + @mod
 
 D4  = SWDice(1, 4)
