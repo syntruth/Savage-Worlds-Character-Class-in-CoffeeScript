@@ -1,2 +1,4 @@
 # 03-08-2012
-Initial Release
+- Initial Release
+- Added Wound and Fatigue methods.
+- Added get_trait method.
